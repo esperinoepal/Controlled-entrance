@@ -1,0 +1,173 @@
+// othoni
+#include <LiquidCrystal_I2C.h>
+
+// set the LCD number of columns and rows
+int lcdColumns = 16;
+int lcdRows = 2;
+
+// set LCD address, number of columns and rows
+// if you don't know your display address, run an I2C scanner sketch
+LiquidCrystal_I2C lcd(0x3f, lcdColumns, lcdRows);  
+//othoni
+
+
+// defines pins numbers
+const int trigPin = 2;
+const int echoPin = 5;
+// defines variables
+long duration;
+int distance;
+
+//**** greek charakters
+//****************************************************************************************************
+byte FI[] = {
+    B01110,
+    B10101,
+    B10101,
+    B10101,
+    B01110,
+    B00100,
+    B00100,
+    B00000
+};
+byte PSI[] = {
+    B10101,
+    B10101,
+    B10101,
+    B01110,
+    B00100,
+    B00100,
+    B00100,
+    B00000
+};
+byte OMEGA[] = {
+    B01110,
+    B10001,
+    B10001,
+    B10001,
+    B01110,
+    B00000,
+    B11111,
+    B00000
+};
+byte GAMMA[] = {
+    B11111,
+    B10000,
+    B10000,
+    B10000,
+    B10000,
+    B10000,
+    B10000,
+    B00000
+};
+byte DELTA[] = {
+    B00100,
+    B01010,
+    B10001,
+    B10001,
+    B10001,
+    B10001,
+    B11111,
+    B00000
+};
+byte LAMDA[] = {
+    B00100,
+    B01010,
+    B10001,
+    B10001,
+    B10001,
+    B10001,
+    B10001,
+    B00000
+};
+byte KSI[] = {
+    B11111,
+    B00000,
+    B00000,
+    B01110,
+    B00000,
+    B00000,
+    B11111,
+    B00000
+};
+byte PEE[] = {
+    B11111,
+    B10001,
+    B10001,
+    B10001,
+    B10001,
+    B10001,
+    B10001,
+    B00000
+};
+
+//***************
+void setup() {
+pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
+pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+Serial.begin(9600); // Starts the serial communication
+// initialize LCD
+
+
+lcd.init();// turn on LCD backlight                      
+lcd.backlight();
+  lcd.createChar(0, FI);
+  lcd.createChar(1, PSI);
+  lcd.createChar(2, OMEGA);
+  lcd.createChar(3, GAMMA);
+  lcd.createChar(4, DELTA);
+  lcd.createChar(5, LAMDA);
+  lcd.createChar(6, KSI);
+  lcd.createChar(7, PEE); 
+
+  
+// lcd telos
+}
+void loop() {
+// Clears the trigPin
+digitalWrite(trigPin, LOW);
+delayMicroseconds(2);
+// Sets the trigPin on HIGH state for 10 micro seconds
+digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+// Reads the echoPin, returns the sound wave travel time in microseconds
+duration = pulseIn(echoPin, HIGH);
+// Calculating the distance
+distance= duration*0.034/2;
+
+// othoni leitourgeia loop // set cursor to first column, first row
+  if (distance < 15) {
+    lcd.clear();
+    lcd.print("BA");
+    lcd.write(5);
+    lcd.print("TE KAPTA"); 
+    delay(2000);
+//lcd.write(1);lcd.write(2);lcd.write(3);lcd.write(4);lcd.write(5);
+//lcd.write(6);lcd.write(7);lcd.write(8);lcd.write(237);lcd.write(236);lcd.write(235);    delay(2000);
+    Serial.print("Distance: ");
+    Serial.println(distance);
+  }
+    else {
+  lcd.setCursor(0, 0);
+  // print message
+  lcd.print("KA");lcd.write(5);lcd.write(2);lcd.write(246);lcd.print(" OPI");lcd.write(246);lcd.print("ATE");
+  delay(1000);
+  // clears the display to print new message
+  lcd.clear();
+  // set cursor to first column, second row
+  lcd.setCursor(0,0);
+  lcd.print(" E");lcd.write(246);lcd.write(7);lcd.print("EPINO E");lcd.write(7);lcd.print("A");lcd.write(5);
+  lcd.setCursor(0,1);
+  lcd.print("   EYO");lcd.write(246);lcd.print("MOY");
+  delay(1000);
+  lcd.clear(); 
+// othoni leitoyrgeia loop end
+  }
+
+
+
+// Prints the distance on the Serial Monitor
+//Serial.print("Distance: ");
+//Serial.println(distance);
+}
